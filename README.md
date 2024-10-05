@@ -15,7 +15,7 @@ The Cool Kids Network is a dynamic web application where users can register and 
 1. **Clone the Repository**
    ```bash
    git clone <repository-url>
-   cd cool-kids-network
+   cd coolkidsnetwork
 2. **Install WordPress**
 Ensure you have a local server environment like XAMPP or WAMP.
 Install WordPress in your desired directory.
