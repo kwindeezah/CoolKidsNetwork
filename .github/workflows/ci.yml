@@ -7,11 +7,16 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - 'bin/**'
+      - 'README.md'
 
 jobs:
   build:
     runs-on:
         - ubuntu-latest
+
+        
 
     services:
       mysql:
@@ -45,10 +50,18 @@ jobs:
         run: |
             php -v
         continue-on-error: ${{ matrix.php-versions == '7.4' }}
-  
 
-      - name: Install Dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install Node.js LTS
+        uses: actions/setup-node@v3
+        with:
+           node-version: 'lts/*'
+           cache: 'yarn'
+    
+      - name: Install Node.js dependencies
+        run: yarn install
+
+      - name: Install Composer dependencies
+        uses: php-actions/composer@v6
 
       - name: Run Unit Tests
         run: vendor/bin/phpunit --configuration phpunit.xml
