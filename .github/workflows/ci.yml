@@ -29,6 +29,7 @@ jobs:
     strategy:
       matrix:
         php-versions: ['7.4', '8.0', '8.1']
+      fail-fast: false
 
     steps:
       - name: Checkout Code
@@ -40,6 +41,12 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, dom, curl, json, mysqli, pdo_mysql
 
+      - name: Run Tests on PHP ${{ matrix.php-versions }}
+        run: |
+            php -v
+        continue-on-error: ${{ matrix.php-versions == '7.4' }}
+  
+
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
@@ -48,5 +55,3 @@ jobs:
 
       - name: Run Linter
         run: vendor/bin/phpcs --standard=PSR12 src/
-
-        continue-on-error: ${{ matrix.php-versions == '7.4' }}
