@@ -1,0 +1,50 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on:
+        - ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+        ports:
+          - 3306:3306
+
+    strategy:
+      matrix:
+        php-versions: ['7.4', '8.0', '8.1']
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, dom, curl, json, mysqli, pdo_mysql
+
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run Unit Tests
+        run: vendor/bin/phpunit --configuration phpunit.xml
+
+      - name: Run Linter
+        run: vendor/bin/phpcs --standard=PSR12 src/
