@@ -16,47 +16,16 @@ jobs:
     runs-on:
         - ubuntu-latest
 
-        
-
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        options: >-
-          --health-cmd "mysqladmin ping --silent"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
-        ports:
-          - 3306:3306
-
-    strategy:
-      matrix:
-        php-versions: ['7.4', '8.0', '8.1']
-      fail-fast: false
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, dom, curl, json, mysqli, pdo_mysql
-
-      - name: Run Tests on PHP ${{ matrix.php-versions }}
-        run: |
-            php -v
-        continue-on-error: ${{ matrix.php-versions == '7.4' }}
-
       - name: Install Node.js LTS
         uses: actions/setup-node@v3
         with:
-           node-version: 'lts/*'
-           cache: 'yarn'
-    
+          node-version: 'lts/*'
+          cache: 'yarn'
+            
       - name: Install Node.js dependencies
         run: yarn install
 
