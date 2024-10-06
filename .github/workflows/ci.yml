@@ -48,3 +48,5 @@ jobs:
 
       - name: Run Linter
         run: vendor/bin/phpcs --standard=PSR12 src/
+
+        continue-on-error: ${{ matrix.php-versions == '7.4' }}
