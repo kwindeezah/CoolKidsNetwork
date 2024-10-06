@@ -20,15 +20,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Node.js LTS
-        uses: actions/setup-node@v3
-        with:
-          node-version: 'lts/*'
-          cache: 'yarn'
-            
-      - name: Install Node.js dependencies
-        run: yarn install
-
       - name: Install Composer dependencies
         uses: php-actions/composer@v6
 
