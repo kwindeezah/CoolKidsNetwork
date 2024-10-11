@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="wp-content/plugins/custom-table-creator/tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="Custom Table Creator Plugin Tests">
+            <directory>./wp-content/plugins/custom-table-creator/tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
