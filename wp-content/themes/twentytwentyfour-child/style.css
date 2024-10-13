@@ -1,0 +1,36 @@
+/*
+Theme Name: Twenty Twenty Four Child
+Theme URI: http://example.com
+Description: Child theme for Twenty Twenty Four Theme
+Author: Hadizat Abdulhakieem
+Template: twentytwentyfour
+Version: 1.0
+*/
+
+@import url("../twentytwentyfour/style.css");
+
+/* Character Dashboard Styling */
+.character-dashboard {
+    margin-top: 80px; 
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;    
+    border-radius: 5px;        
+    width: 80%;                
+    max-width: 800px;          
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    
+}
+
+.character-dashboard h2 {
+    color: #333;       
+    text-align: center; 
+}
+
+.character-dashboard p {
+    font-size: 16px;    
+    color: #555;       
+    margin: 10px 0;     
+}
