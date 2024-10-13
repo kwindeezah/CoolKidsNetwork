@@ -16,7 +16,7 @@ function custom_signin_form() {
     ob_start();
     ?>
 
-    <!-- Sign In form -->
+    Sign In form
     <form method="POST" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
         <input type="hidden" name="action" value="login_user">
         <label for="character-email">Email:</label>

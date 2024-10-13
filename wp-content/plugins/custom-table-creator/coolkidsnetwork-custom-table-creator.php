@@ -87,12 +87,13 @@ function coolkidsnetwork_insert_custom_data() {
             exit;
         }
 
-        // Set success message
+        // Sets success message
         $_SESSION['success_message'] = 'Registration successful! Please sign in.';
         wp_redirect(home_url('/sign-in')); // Redirects to sign in page
         exit;
     }
 }
+add_action('admin_post_nopriv_register_user', 'coolkidsnetwork_insert_custom_data');
 add_action('admin_post_register_user', 'coolkidsnetwork_insert_custom_data');
 
 
@@ -106,19 +107,19 @@ function coolkidsnetwork_user_login() {
 
         $table_name = $wpdb->prefix . 'characters';
 
-        // Query the custom characters table to check if the email exists
+        // Queries the character table to check if the email exists
         $user = $wpdb->get_row( $wpdb->prepare(
             "SELECT * FROM $table_name WHERE email = %s", $email
         ));
 
-        // Check if the email exists in the table
+        // Checks if the email exists in the table
         if ($user) {
             
             if (!session_id()) {
                 session_start();
             }
 
-            // Store user data in the session
+            // Stores user data in the session
             $_SESSION['user_id'] = $user->id;
             $_SESSION['email'] = $user->email;
             $_SESSION['first_name'] = $user->first_name;
@@ -126,7 +127,7 @@ function coolkidsnetwork_user_login() {
             $_SESSION['country'] = $user->country;
             $_SESSION['role'] = $user->role;
 
-            // Redirect to the dashboard or a successful login page
+            // Redirects to the dashboard
             wp_redirect(home_url('/dashboard'));
             exit;
         } else {
@@ -136,5 +137,7 @@ function coolkidsnetwork_user_login() {
         }
     }
 }
+add_action('admin_post_nopriv_login_user', 'coolkidsnetwork_user_login');
+add_action('admin_post_login_user', 'coolkidsnetwork_user_login');
 
 ?>
