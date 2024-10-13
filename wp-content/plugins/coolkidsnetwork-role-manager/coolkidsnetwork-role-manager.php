@@ -6,32 +6,31 @@
  * Author: Hadizat Abdulhakieem
  */
 
-// Includes the admin interface and endpoint logic
-require_once plugin_dir_path(__FILE__) . 'includes/role-manager-admin.php';
+// Includes the necessary files
 require_once plugin_dir_path(__FILE__) . 'includes/role-manager-api.php';
+require_once plugin_dir_path(__FILE__) . 'includes/role-manager-admin.php';
 
-// Registers the Maintain Characters Button shortcode
-function maintain_characters_button_shortcode() {
-    // Checks if the current user is an administrator
-    if (current_user_can('administrator')) {
-        // Show the button to administrators
-        return '<a href="' . admin_url('admin.php?page=coolkidsnetwork_maintain_characters') . '" class="button">Maintain Characters</a>';
-    } else {
-        // Non-admins see the flash message and get redirected
-        if (!empty($_SESSION['error_message'])) {
-            return '<div class="error-message">' . $_SESSION['error_message'] . '</div>';
-        }
-        return '';
-    }
-}
-add_shortcode('maintain_characters_button', 'maintain_characters_button_shortcode');
+// Activates the plugin to create the characters table
+register_activation_hook(__FILE__, 'coolkidsnetwork_create_characters_table');
 
-// Start the session to handle flash messages
-function coolkidsnetwork_start_session() {
-    if (!session_id()) {
-        session_start();
-    }
+function coolkidsnetwork_create_characters_table() {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'characters';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        email varchar(100) NOT NULL,
+        first_name varchar(100) NOT NULL,
+        last_name varchar(100) NOT NULL,
+        role varchar(50) NOT NULL,
+        PRIMARY KEY  (id),
+        UNIQUE KEY email (email)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
 }
-add_action('init', 'coolkidsnetwork_start_session');
 
 ?>

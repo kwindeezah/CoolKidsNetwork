@@ -1,58 +1,65 @@
 <?php
 
-// Adds the "Maintain Characters" page to the WordPress admin menu
-function coolkidsnetwork_role_manager_menu() {
+// Adds the admin menu page
+add_action('admin_menu', 'coolkidsnetwork_add_admin_menu');
+
+function coolkidsnetwork_add_admin_menu() {
     add_menu_page(
-        'Maintain Characters',
-        'Maintain Characters',
-        'administrator',
-        'coolkidsnetwork_maintain_characters',
-        'coolkidsnetwork_role_manager_admin_page',
-        'dashicons-admin-users',
-        6
+        'Role Manager',
+        'Role Manager',
+        'manage_options',
+        'coolkidsnetwork-role-manager',
+        'coolkidsnetwork_role_manager_page'
     );
 }
-add_action('admin_menu', 'coolkidsnetwork_role_manager_menu');
 
-// Admin page to display and change user roles
-function coolkidsnetwork_role_manager_admin_page() {
-    global $wpdb;
-
-    // Handles success or error messages
-    if (!empty($_SESSION['success_message'])) {
-        echo '<div class="notice notice-success">' . $_SESSION['success_message'] . '</div>';
-        unset($_SESSION['success_message']);
-    }
-
-    // Queries characters from the custom table
-    $characters = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}characters");
-
-    echo '<h1>Maintain Characters</h1>';
-    echo '<table class="widefat fixed">';
-    echo '<thead><tr><th>Email</th><th>First Name</th><th>Last Name</th><th>Role</th><th>Action</th></tr></thead>';
-    echo '<tbody>';
-
-    foreach ($characters as $character) {
-        echo '<tr>';
-        echo '<td>' . esc_html($character->email) . '</td>';
-        echo '<td>' . esc_html($character->first_name) . '</td>';
-        echo '<td>' . esc_html($character->last_name) . '</td>';
-        echo '<td>' . esc_html($character->role) . '</td>';
-        echo '<td>
-                <form method="post" action="' . admin_url('admin-post.php') . '">
-                    <input type="hidden" name="action" value="change_role">
-                    <input type="hidden" name="email" value="' . esc_attr($character->email) . '">
-                    <select name="new_role">
-                        <option value="Cool Kid"' . selected($character->role, 'Cool Kid', false) . '>Cool Kid</option>
-                        <option value="Cooler Kid"' . selected($character->role, 'Cooler Kid', false) . '>Cooler Kid</option>
-                        <option value="Coolest Kid"' . selected($character->role, 'Coolest Kid', false) . '>Coolest Kid</option>
-                    </select>
-                    <input type="submit" class="button" value="Change Role">
-                </form>
-              </td>';
-        echo '</tr>';
-    }
-
-    echo '</tbody>';
-    echo '</table>';
+// Role maintainer's page content
+function coolkidsnetwork_role_manager_page() {
+    ?>
+    <div class="wrap">
+        <h1>Change User Role</h1>
+        <form id="change-role-form">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required>
+            
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" required>
+            
+            <label for="role">New Role:</label>
+            <select id="role" name="role" required>
+                <option value="Cool Kid">Cool Kid</option>
+                <option value="Cooler Kid">Cooler Kid</option>
+                <option value="Coolest Kid">Coolest Kid</option>
+            </select>
+            
+            <input type="submit" value="Change Role">
+        </form>
+        <div id="response"></div>
+    </div>
+    <script>
+        document.getElementById('change-role-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            fetch('<?php echo esc_url(rest_url('coolkidsnetwork/v1/change-role')); ?>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': '<?php echo wp_create_nonce('wp_rest'); ?>'
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').innerText = data.message || 'Role updated successfully!';
+            })
+            .catch(error => {
+                document.getElementById('response').innerText = 'Error: ' + error.message;
+            });
+        });
+    </script>
+    <?php
 }
