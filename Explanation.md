@@ -11,8 +11,8 @@ Instead of using the default WordPress user authentication (wp_users), the syste
 Upon logging in, the user can view their own character details such as their first name, last name, country, email, and role. This data is fetched directly from the wp_characters table using the logged-in user's email.
 
 3. **Role-based Access to Other Characters**
-Based on the user’s role:
 
+Based on the user’s role:
 **Cooler Kid**: Can view the first name, last name, and country of all users.
 
 **Coolest Kid**: Can view all users' first name, last name, email, role, and country.
