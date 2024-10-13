@@ -25,7 +25,7 @@ function coolkidsnetwork_dashboard() {
         <h2>Your Character Details</h2>
         <?php
         // Checks if user is logged in
-        if (is_user_logged_in()) {
+        if (!is_character_logged_in()) {
             $_SESSION['error_message'] = 'You need to log in to view your character details.';
             wp_redirect(home_url('/sign-in'));  // Redirects to login page
             exit;
@@ -116,5 +116,20 @@ function display_other_characters($user_role) {
         echo '<p>You do not have permission to view other characters.</p>';
     }
 }
+
+// Custom function to check if the user is logged in via the characters table
+function is_character_logged_in() {
+    if (isset($_SESSION['email'])) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'characters';
+        $email = $_SESSION['email'];
+        $character = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM $table_name WHERE email = %s", $email)
+        );
+        return $character !== null; // Return true if character exists
+    }
+    return false; // No email in session means not logged in
+}
+
 // Registers the shortcode
 add_shortcode('coolkidsnetwork_user_dashboard', 'coolkidsnetwork_dashboard');
