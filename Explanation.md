@@ -14,8 +14,11 @@ Upon logging in, the user can view their own character details such as their fir
 Based on the user’s role:
 
 **Cooler Kid**: Can view the first name, last name, and country of all users.
+
 **Coolest Kid**: Can view all users' first name, last name, email, role, and country.
+
 **Cool Kid**: No access to view other users’ details.
+
 This logic is handled by checking the user's role in the database and providing the corresponding view when the "**See Other Characters**" button is clicked.
 
 4. **Button to View Other Characters**
