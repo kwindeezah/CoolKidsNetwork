@@ -32,7 +32,7 @@ Once logged in, the system determines the character's role a button labeled "See
 
 **Session Handling for Login**: To handle character authentication, I used PHP sessions ($_SESSION['email']) for storing the email of logged-in users. This allowed me to keep authentication independent from the default WordPress system while integrating smoothly with the custom table.
 
-**Role-based Conditional Access**: The decision to implement a simple conditional check on user roles makes the system efficient. The logic restricts data visibility without complicating the UI or requiring additional data layers. This keeps the system lean and scalable for future modifications.
+**Role-based Conditional Access through API Authentication**: The decision to implement an authenticated API endpoint for changing user roles enhances security and ensures that only authorized users (administrators) can perform this action. This approach aligns with the user story by providing a structured method for role management while maintaining data integrity. By leveraging authentication, we ensure that access control is robust, reducing the risk of unauthorized changes, and keeping the system flexible for future enhancements.
 
 **Shortcode Usage**: To make the feature easily reusable and deployable across different pages in WordPress, I encapsulated the entire dashboard display functionality within a shortcode (coolkidsnetwork_user_dashboard). This improves modularity and allows the admin to place this functionality anywhere within the WordPress site.
 
